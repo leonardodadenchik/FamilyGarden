@@ -1,14 +1,13 @@
-import React from 'react';
 import {useState} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Button, Text, View} from 'react-native';
 
-export default function TodoScreen() {
+export default function ToDoScreen() {
 
     const [count, setCount] = useState(0);
 
     return (
 
-        <View>
+        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
 
             <Text>You clicked {count} times</Text>
 

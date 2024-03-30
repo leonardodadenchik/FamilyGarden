@@ -1,6 +1,5 @@
-import React from "react";
 import {Text, View, StyleSheet} from "react-native";
-
+import {Link} from "expo-router";
 const styles = StyleSheet.create({
     center: {
         flex: 1,
@@ -32,9 +31,7 @@ export default function HomeScreen() {
             <FamilyMember name="Roman" color="green"/>
             <FamilyMember name="Denys" color="blue"/>
             <FamilyMember name="Test" color="pink"/>
+            <Link href="/(other)/Settings">Settings</Link>
         </View>
-
-
     );
-
 }

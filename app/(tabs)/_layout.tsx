@@ -1,12 +1,14 @@
 import {Tabs} from 'expo-router';
 
-export default () => {
+export default function StackLayout() {
     return (
         <Tabs>
-            <Tabs.Screen name="HomeScreen"/>
-            <Tabs.Screen name="TodoScreen"/>
-            <Tabs.Screen name="AssignTodoScreen"/>
-            <Tabs.Screen name="MarketScreen"/>
+            <Tabs.Screen name="Home"
+                         options={{headerTitleAlign: 'center'}}/>
+            <Tabs.Screen name="ToDo"
+                         options={{headerTitleAlign: 'center'}}/>
+            <Tabs.Screen name="Market"
+                         options={{headerTitleAlign: 'center'}}/>
         </Tabs>
     );
 }
