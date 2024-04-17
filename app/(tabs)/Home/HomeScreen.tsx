@@ -1,6 +1,8 @@
 import {Text, View, StyleSheet} from "react-native";
 import {Link} from "expo-router";
-const styles = StyleSheet.create({
+import {useAuth} from "@/app/context/auth";
+
+    const styles = StyleSheet.create({
     center: {
         flex: 1,
         alignItems: "center",
@@ -23,6 +25,7 @@ const FamilyMember = (props: GreetingProps) => {
 };
 
 export default function HomeScreen() {
+    const {onLogout} = useAuth()
 
     return (
         // your home screen content here
@@ -32,6 +35,12 @@ export default function HomeScreen() {
             <FamilyMember name="Denys" color="blue"/>
             <FamilyMember name="Test" color="pink"/>
             <Link href="/(other)/Settings">Settings</Link>
+
+            <Text onPress={()=> {
+                onLogout().then((result) => {
+                    console.log(result.data.value);
+                }).catch((error) => {console.log(error)})
+            }}>Logout{"\n"}</Text>
         </View>
     );
 }
