@@ -61,26 +61,26 @@ export const AuthProvider = ({children}: any) => {
     }, [])
 
     //Set refresh time for the token if exists or refresh immediately
-    useEffect(() => {
-        const tokenCheck = () => {
-            if (authState.token) {
-                let decodedToken = jwtDecode(authState.token);
-                let daysSinceCreation = (Date.now()/1000 - decodedToken.iat)/(60*60*24);
-                if (daysSinceCreation >= 1){    //if token older than day then refresh it
-                    refreshToken().catch((err) => {console.log(err)})
-                }else{
-                    const renewToken = setTimeout(() => {refreshToken().catch((err) => {console.log(err)})}, (1 - daysSinceCreation)*24+60+60)
-                    return () => {
-                        clearTimeout(renewToken)
-                    }
-                }
-            }
-        }
-
-        let tokenCheckClear = tokenCheck()
-
-        return tokenCheckClear
-    },[authState])
+    // useEffect(() => {
+    //     const tokenCheck = () => {
+    //         if (authState.token) {
+    //             let decodedToken = jwtDecode(authState.token);
+    //             let daysSinceCreation = (Date.now()/1000 - decodedToken.iat)/(60*60*24);
+    //             if (daysSinceCreation >= 1){    //if token older than day then refresh it
+    //                 refreshToken().catch((err) => {console.log(err)})
+    //             }else{
+    //                 const renewToken = setTimeout(() => {refreshToken().catch((err) => {console.log(err)})}, (1 - daysSinceCreation)*24+60+60)
+    //                 return () => {
+    //                     clearTimeout(renewToken)
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    //     let tokenCheckClear = tokenCheck()
+    //
+    //     return tokenCheckClear
+    // },[authState])
 
     const router = useRouter()
     // display the tabs screen if the user is authenticated
