@@ -6,7 +6,7 @@ export default function AuthScreen() {
 
     return (
         <View>
-            <Button title={"Register"} onClick={()=> {
+            <Button title={"Register"} onPress={()=> {
                 onRegister("dima@user.user", "password", "Misha", "Prokopenko", 1, 1, "pixel", "2024-03-27").then((result) => {
                     console.log(result.data);
                 }).catch((error) => {console.log(error)})

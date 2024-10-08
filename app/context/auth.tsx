@@ -22,7 +22,7 @@ interface AuthProps {
 
 const TOKEN_KEY = 'my-token';
 const REFRESH_TOKEN_KEY = 'my-refresh-token'
-export const API_URL = 'https://familygarden.somee.com/api/v1';
+export const API_URL = 'http://fgarden.somee.com/api/v1';
 const AuthContext = createContext<AuthProps | undefined>(undefined);
 
 export const useAuth = () => {

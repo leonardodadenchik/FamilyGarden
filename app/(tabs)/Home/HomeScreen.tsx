@@ -1,8 +1,10 @@
-import {Text, View, StyleSheet} from "react-native";
+import {useState} from "react";
+import {StyleSheet, Text, View, Button} from "react-native";
 import {Link} from "expo-router";
 import {useAuth} from "@/app/context/auth";
+import ChildComponent from "@/app/(tabs)/Home/SubComponents/ChildComponent";
 
-    const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     center: {
         flex: 1,
         alignItems: "center",
@@ -27,6 +29,12 @@ const FamilyMember = (props: GreetingProps) => {
 export default function HomeScreen() {
     const {onLogout} = useAuth()
 
+    let [isVisible,setIsVisible] = useState(true);
+
+    function changeVisibility() {
+        setIsVisible(!isVisible);
+    }
+
     return (
         // your home screen content here
         <View style={[styles.center]}>
@@ -34,13 +42,27 @@ export default function HomeScreen() {
             <FamilyMember name="Roman" color="green"/>
             <FamilyMember name="Denys" color="blue"/>
             <FamilyMember name="Test" color="pink"/>
-            <Link href="/(other)/Settings">Settings</Link>
+            <Link href="/(other)/Settings" asChild>
+                <Button title="Settings" />
+            </Link>
 
-            <Text onPress={()=> {
+            <Button
+                title="Logout"
+                onPress={() => {
                 onLogout().then((result) => {
                     console.log(result.data.value);
-                }).catch((error) => {console.log(error)})
-            }}>Logout{"\n"}</Text>
+                }).catch((error) => {
+                    console.log(error)
+                })
+            }}/>
+
+            <Button title="SwitchComponent" onPress={()=> changeVisibility() }/>
+            <View style= {{display: isVisible ? 'flex' : 'none'}}>
+                <ChildComponent/>
+            </View>
+
+
+
         </View>
-    );
+);
 }

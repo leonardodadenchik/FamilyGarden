@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {Button, Text, View} from 'react-native';
+import {Link} from "expo-router";
 
 export default function ToDoScreen() {
 
@@ -12,7 +13,9 @@ export default function ToDoScreen() {
             <Text>You clicked {count} times</Text>
 
             <Button onPress={() => setCount(count + 1)} title="Click me!"/>
-
+            <Link href="/(other)/Settings" asChild>
+                <Button title="Settings" />
+            </Link>
 
         </View>
 
