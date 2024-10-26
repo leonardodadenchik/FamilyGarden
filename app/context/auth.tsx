@@ -3,6 +3,7 @@ import {useRouter, useSegments} from 'expo-router'
 import axios from 'axios'
 import * as SecureStore from 'expo-secure-store';
 import {jwtDecode} from 'jwt-decode';
+import {TOKEN_KEY,REFRESH_TOKEN_KEY,API_URL} from "@/constants/constants";
 // @ts-ignore
 import {decode} from 'base-64';
 
@@ -18,7 +19,7 @@ interface SignOutResponse {
 	error: any | undefined,
 }
 
-interface AuthProps {
+interface AuthContextProps {
 	authState: { token: string | null, refreshToken: string | null, authenticated: boolean | null },
 	onRegister: (email: string,
 				 password: string,
@@ -32,11 +33,7 @@ interface AuthProps {
 	onLogout: () => Promise<SignOutResponse>
 }
 
-const TOKEN_KEY = 'my-token';
-const REFRESH_TOKEN_KEY = 'my-refresh-token'
-const API_URL = 'http://fgarden.somee.com/api/v1';
-
-const AuthContext = createContext<AuthProps | undefined>(undefined);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 const useAuthContext = () => {
 	const authContext = useContext(AuthContext);
@@ -56,7 +53,7 @@ const AuthProvider = ({children}: any) => {
 	}>({
 		token: null,
 		refreshToken: null,
-		authenticated: null
+		authenticated: false
 	});
 
 	// Check if there is any tokens stored
