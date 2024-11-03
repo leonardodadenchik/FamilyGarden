@@ -28,7 +28,7 @@ const FamilyMember = (props: GreetingProps) => {
 };
 
 export default function HomeScreen() {
-	const {onLogout} = useAuthContext()
+	const {logout} = useAuthContext()
 
 	const [userType, setUserType] = useState('parent');
 
@@ -44,7 +44,7 @@ export default function HomeScreen() {
 			</Link>
 
 			<Button title="Logout" onPress={async () => {
-				const {data, error} = await onLogout()
+				const {data, error} = await logout()
 				if (data) {
 					console.log(data.data.value);
 				} else {

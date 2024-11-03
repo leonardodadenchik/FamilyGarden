@@ -2,12 +2,12 @@ import {Text, Button, View} from "react-native";
 import {useAuthContext} from "@/app/context/auth";
 
 export default function AuthScreen() {
-    const {authState, onRegister, onLogin, onLogout} = useAuthContext();
+    const {authState, register, login, logout} = useAuthContext();
 
     return (
         <View>
             <Button title={"Register"} onPress={async () => {
-                const {data, error} = await onRegister("dima@user.user", "password", "Misha", "Prokopenko", 1, 1, "pixel", "2024-03-27")
+                const {data, error} = await register("dima@user.user", "password", "Misha", "Prokopenko", 1, 1, "pixel", "2024-03-27")
                 if (data){
 					console.log(data.data);
 				}else {
@@ -17,7 +17,7 @@ export default function AuthScreen() {
             />
 
             <Button title={"Login"} onPress={async () => {
-                const {data, error} = await onLogin("dima@user.user", "password", "pixel"); //"admin@admin.admin", "admin1", "pixel"
+                const {data, error} = await login("dima@user.user", "password", "pixel"); //"admin@admin.admin", "admin1", "pixel"
                 if (data) {
                     console.log(data.data.value);
                 } else {
@@ -28,7 +28,7 @@ export default function AuthScreen() {
             />
 
             <Button title={"Logout"} onPress={async () => {
-                const {data, error} = await onLogout()
+                const {data, error} = await logout()
                 if (data) {
                     console.log(data.data.value);
                 }else {

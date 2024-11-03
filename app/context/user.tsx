@@ -3,15 +3,6 @@ import {useAuthContext} from "@/app/context/auth";
 import axios from "axios";
 import {API_URL} from "@/constants/constants";
 
-interface GetUserResponse {
-	data: any | undefined;
-	error: any | undefined;
-}
-
-interface UserContextProps {
-	someValue: any | undefined;
-}
-
 interface UserDataProps {
 	profileData: {
 		isReceived: boolean | undefined,
@@ -30,6 +21,53 @@ interface UserDataProps {
 		userStatus: string | undefined
 
 	}
+}
+
+interface CreateFamilyResponse {
+	data: any | undefined,
+	error: any | undefined,
+}
+
+interface GetFamilyResponse {
+	data: any | undefined,
+	error: any | undefined,
+}
+
+interface LeaveFamilyResponse {
+	data: any | undefined,
+	error: any | undefined,
+}
+
+interface GetCurrentUserResponse {
+	data: any | undefined,
+	error: any | undefined,
+}
+
+interface UpdateUserResponse {
+	data: any | undefined,
+	error: any | undefined,
+}
+
+interface AddToFamilyResponse {
+	data: any | undefined,
+	error: any | undefined,
+}
+
+interface UserContextProps {
+	appData: UserDataProps | undefined;
+	getCurrentUser: () => Promise<GetCurrentUserResponse>;
+	updateUser: (userRoleId: number,
+				 userGenderId: number,
+				 userStatusId: number,
+				 userName: string,
+				 firstName: string,
+				 lastName: string,
+				 email: string,
+				 hexColor: string) => Promise<UpdateUserResponse>;
+	createFamily: (newFamilyName: string, newFamilyDescription: string) => Promise<CreateFamilyResponse>,
+	getFamily: () => Promise<GetFamilyResponse>,
+	addToFamily: (userId: number) => Promise<AddToFamilyResponse>,
+	leaveFamily: () => Promise<LeaveFamilyResponse>,
 }
 
 
@@ -66,6 +104,8 @@ const UserProvider = ({children}: any) => {
 	});
 
 	const {authState} = useAuthContext();
+
+	//Automatically load user data
 	useEffect(() => {
 		if (authState.authenticated == true) {
 			axios.defaults.headers.common['authorization'] = `Bearer ${authState.token}`
@@ -73,7 +113,7 @@ const UserProvider = ({children}: any) => {
 			const updateUserData = async () => {
 				const {data, error} = await getCurrentUser()
 				if (data) {
-					 setAppData({
+					setAppData({
 						profileData: {
 							isReceived: true,
 							userId: data.data.value.userId,
@@ -96,12 +136,15 @@ const UserProvider = ({children}: any) => {
 					console.log(error);
 				}
 			}
+
 			if (!appData.profileData.isReceived) {
 				updateUserData()
 			}
 
 		}
 	}, [authState]);
+
+	//User Management
 
 	const getCurrentUser = async () => {
 		try {
@@ -112,9 +155,84 @@ const UserProvider = ({children}: any) => {
 		}
 	}
 
-	const value = {
-		someValue: "value"
+	const updateUser = async (userRoleId: number,
+							  userGenderId: number,
+							  userStatusId: number,
+							  userName: string,
+							  firstName: string,
+							  lastName: string,
+							  email: string,
+							  hexColor: string) => {
+		try {
+			const result = await axios.put(`${API_URL}/user/update`,
+				{
+					userRoleId: 1,
+					userGenderId: 1,
+					userStatusId: 1,
+					userName: "MishaProkopenko",
+					firstName: "Misha",
+					lastName: "Prokopenko",
+					email: "dima@user.user",
+					hexColor: "#1CCA4B"
+				})
+			return {data: result, error: undefined}
+		} catch (error) {
+			return {data: undefined, error: error};
+		}
 	}
+
+	//Family Management
+	const createFamily = async (newFamilyName: string, newFamilyDescription: string) => {
+		try {
+			const result = await axios.post(`${API_URL}/user/create-family`, {
+				familyName: newFamilyName,
+				familyDescription: newFamilyDescription
+			})
+
+			return {data: result, error: undefined};
+		} catch (error) {
+			return {data: undefined, error: error};
+		}
+	}
+
+	const getFamily = async () => {
+		try {
+			const result = await axios.get(`${API_URL}/user/get-my-family`)
+			return {data: result, error: undefined}
+		} catch (error) {
+			return {data: undefined, error: undefined}
+		}
+	}
+
+	const addToFamily = async (userId: number) => {
+		try {
+			const result = await axios.patch(`${API_URL}/user/add-to-family?userToAdd=${userId}`)
+			return {data: result, error: undefined}
+		}catch (error) {
+			return {data: undefined, error: error};
+		}
+	}
+
+	const leaveFamily = async () => {
+		try {
+			const result = await axios.delete(`${API_URL}/user/leave-family`)
+			return {data: result, error: undefined};
+		} catch (error) {
+			return {data: undefined, error: error};
+		}
+	}
+
+
+	const value = {
+		getCurrentUser,
+		updateUser,
+		createFamily,
+		getFamily,
+		addToFamily,
+		leaveFamily,
+		appData,
+	}
+
 	return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
 

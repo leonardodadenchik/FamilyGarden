@@ -3,7 +3,7 @@ import {useRouter, useSegments} from 'expo-router'
 import axios from 'axios'
 import * as SecureStore from 'expo-secure-store';
 import {jwtDecode} from 'jwt-decode';
-import {TOKEN_KEY,REFRESH_TOKEN_KEY,API_URL} from "@/constants/constants";
+import {TOKEN_KEY, REFRESH_TOKEN_KEY, API_URL} from "@/constants/constants";
 // @ts-ignore
 import {decode} from 'base-64';
 
@@ -21,16 +21,16 @@ interface SignOutResponse {
 
 interface AuthContextProps {
 	authState: { token: string | null, refreshToken: string | null, authenticated: boolean | null },
-	onRegister: (email: string,
-				 password: string,
-				 firstName: string,
-				 lastName: string,
-				 userGenderId: number,
-				 userRoleId: number,
-				 deviceInformation: string,
-				 birthDate: string) => Promise<SignInResponse>,
-	onLogin: (email: string, password: string, deviceInformation: string) => Promise<SignInResponse>,
-	onLogout: () => Promise<SignOutResponse>
+	register: (email: string,
+			   password: string,
+			   firstName: string,
+			   lastName: string,
+			   userGenderId: number,
+			   userRoleId: number,
+			   deviceInformation: string,
+			   birthDate: string) => Promise<SignInResponse>,
+	login: (email: string, password: string, deviceInformation: string) => Promise<SignInResponse>,
+	logout: () => Promise<SignOutResponse>
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -38,7 +38,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 const useAuthContext = () => {
 	const authContext = useContext(AuthContext);
 
-	if (!authContext){
+	if (!authContext) {
 		throw new Error('useAuthContext must be used within a AuthProvider');
 	}
 	return authContext;
@@ -237,9 +237,9 @@ const AuthProvider = ({children}: any) => {
 
 
 	const value = {
-		onRegister: register,
-		onLogin: login,
-		onLogout: logout,
+		register,
+		login,
+		logout,
 		authState
 	};
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
