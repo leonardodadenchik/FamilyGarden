@@ -1,7 +1,8 @@
 import {useState} from "react";
-import {StyleSheet, Text, View, Button} from "react-native";
+import {StyleSheet} from "react-native";
+import {Text, View, Button} from 'tamagui';
 import {Link} from "expo-router";
-import {useAuthContext} from "@/app/context/auth";
+import {useAuthContext} from "@/app/context/Auth";
 import ChildComponent from "@/app/(tabs)/Home/SubComponents/ChildComponent";
 import ParentComponent from "@/app/(tabs)/Home/SubComponents/ParentComponent";
 
@@ -40,10 +41,9 @@ export default function HomeScreen() {
 			<FamilyMember name="Denys" color="blue"/>
 			<FamilyMember name="Test" color="pink"/>
 			<Link href="/(other)/Settings" asChild>
-				<Button title="Settings"/>
+				<Button>Settings</Button>
 			</Link>
-
-			<Button title="Logout" onPress={async () => {
+			<Button onPress={async () => {
 				const {data, error} = await logout()
 				if (data) {
 					console.log(data.data.value);
@@ -51,12 +51,12 @@ export default function HomeScreen() {
 					console.log(error)
 				}
 			}}
-			/>
+			>Logout</Button>
 
 			<View>
 				{userType === 'parent' ? <ParentComponent/> : <ChildComponent/>}
-				<Button title="Switch to Parent" onPress={() => setUserType('parent')}/>
-				<Button title="Switch to Child" onPress={() => setUserType('child')}/>
+				<Button onPress={() => setUserType('parent')}>Switch to Parent</Button>
+				<Button onPress={() => setUserType('child')}>Switch to Child</Button>
 			</View>
 
 

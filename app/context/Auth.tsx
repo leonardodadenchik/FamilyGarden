@@ -9,28 +9,43 @@ import {decode} from 'base-64';
 
 global.atob = decode;
 
-interface SignInResponse {
+interface RegisterProps {
+	email: string,
+	password: string,
+	firstName: string,
+	lastName: string,
+	userGenderId: number,
+	userRoleId: number,
+	deviceInformation: string,
+	birthDate: string,
+}
+
+interface RegisterResponse {
 	data: any | undefined,
 	error: any | undefined,
 }
 
-interface SignOutResponse {
+interface LoginProps {
+	email: string,
+	password: string,
+	deviceInformation: string,
+}
+
+interface LoginResponse {
+	data: any | undefined,
+	error: any | undefined,
+}
+
+interface LogoutResponse {
 	data: any | undefined,
 	error: any | undefined,
 }
 
 interface AuthContextProps {
 	authState: { token: string | null, refreshToken: string | null, authenticated: boolean | null },
-	register: (email: string,
-			   password: string,
-			   firstName: string,
-			   lastName: string,
-			   userGenderId: number,
-			   userRoleId: number,
-			   deviceInformation: string,
-			   birthDate: string) => Promise<SignInResponse>,
-	login: (email: string, password: string, deviceInformation: string) => Promise<SignInResponse>,
-	logout: () => Promise<SignOutResponse>
+	register: (registerProps: RegisterProps) => Promise<RegisterResponse>,
+	login: (loginProps: LoginProps) => Promise<LoginResponse>,
+	logout: () => Promise<LogoutResponse>
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
@@ -129,25 +144,9 @@ const AuthProvider = ({children}: any) => {
 	}, [authState])
 
 
-	const register = async (email: string,
-							password: string,
-							firstName: string,
-							lastName: string,
-							userGenderId: number,
-							userRoleId: number,
-							deviceInformation: string,
-							birthDate: string) => {
+	const register = async (registerProps: RegisterProps) => {
 		try {
-			const result = await axios.post(`${API_URL}/auth/register`, {
-				email,
-				password,
-				firstName,
-				lastName,
-				userGenderId,
-				userRoleId,
-				deviceInformation,
-				birthDate
-			});
+			const result = await axios.post(`${API_URL}/auth/register`, registerProps);
 
 			axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.value.token}`
 
@@ -166,9 +165,9 @@ const AuthProvider = ({children}: any) => {
 		}
 	}
 
-	const login = async (email: string, password: string, deviceInformation: string) => {
+	const login = async (loginProps: LoginProps) => {
 		try {
-			const result = await axios.post(`${API_URL}/auth/login`, {email, password, deviceInformation});
+			const result = await axios.post(`${API_URL}/auth/login`, loginProps);
 
 			axios.defaults.headers.common['Authorization'] = `Bearer ${result.data.value.token}`
 
@@ -246,7 +245,6 @@ const AuthProvider = ({children}: any) => {
 }
 
 export {
-	API_URL,
 	useAuthContext,
 	AuthProvider
 }
